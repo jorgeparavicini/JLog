@@ -1,0 +1,9 @@
+{
+  "name": "com.jorgeparavicini.jlog",
+  "version": "0.0.1",
+  "displayName": "JLog",
+  "description": "A Logger for Unity based on the NLog Package for C#",
+  "unity": "2020.1",
+  "unityRelease": "0b14",
+  "type": "library"
+}
