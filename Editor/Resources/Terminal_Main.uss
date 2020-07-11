@@ -1,0 +1,26 @@
+.jlog-terminal {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.jlog-terminal-toolbar {
+    height: 24px;
+    background-color: #0000ff;
+}
+
+.jlog-terminal-content {
+    background-color: yellow;
+    height: 100%;
+}
+
+
+
+.green {
+    background-color: green;
+}
+
+.red {
+    background-color: red;
+}
+

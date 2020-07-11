@@ -1,3 +1,18 @@
-﻿{
-	"name": "Unity.JLog.Editor"
+{
+    "name": "Unity.JLog.Editor",
+    "rootNamespace": "JLog",
+    "references": [
+        "GUID:a8e00d1be1b45e745833404cbad3945c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
