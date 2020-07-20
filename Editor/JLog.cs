@@ -13,6 +13,7 @@ namespace JLog.Runtime
         public static void Initialize()
         {
             LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration(ConfigPath);
+            Debug.Log("Hue");
             Logger.Error("Hue");
         }
     }

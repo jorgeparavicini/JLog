@@ -8,80 +8,104 @@ namespace JLog.Editor
 {
     public class Terminal : EditorWindow
     {
-        #region Constants
-        
-        private const string ClearButtonName = "Clear";
-        
-        #endregion
-        
         #region Properties
 
-        private static VisualTreeAsset RootTree => Resources.Load<VisualTreeAsset>("Terminal_Main");
-        private static StyleSheet StyleSheet => Resources.Load<StyleSheet>("Terminal_Main");
-        private static Terminal Window => GetWindow<Terminal>();
+        //TODO: Make Private after testing
+        public static Terminal Window => GetWindow<Terminal>();
+
+        private VisualElement TabBar => rootVisualElement.Q("jlog-terminal-tab-bar");
+
+        #endregion
+
+        #region UiResources
+
+        private static readonly Lazy<VisualTreeAsset> RootTree =
+            new Lazy<VisualTreeAsset>(() => Resources.Load<VisualTreeAsset>("Terminal_Main"));
+
+        private static readonly Lazy<StyleSheet> StyleSheet =
+            new Lazy<StyleSheet>(() => Resources.Load<StyleSheet>("Terminal_Main"));
+
+        private static readonly Lazy<VisualTreeAsset> TabPreviewTree = 
+            new Lazy<VisualTreeAsset>(() => Resources.Load<VisualTreeAsset>("Terminal_TabPreview"));
         
         #endregion
 
         #region Fields
 
-        private readonly List<TerminalTarget> _targets = new List<TerminalTarget>();
+        private readonly List<TerminalTab> _tabs = new List<TerminalTab>();
 
         #endregion
-        
-        #region initializer
-        
+
+        #region Initializer
+
         [MenuItem("Window/Terminal")]
         public static void ShowWindow()
         {
             Window.titleContent = new GUIContent("Terminal");
         }
-        
+
         #endregion
-        
+
         #region Window Configuration
 
         private void OnEnable()
         {
             // The root element of the window.
             var root = rootVisualElement;
-            root.styleSheets.Add(StyleSheet);
-            RootTree.CloneTree(root);
-
-            root.Q<Button>(ClearButtonName).clickable.clicked += Clear_OnClick;
+            root.styleSheets.Add(StyleSheet.Value);
+            RootTree.Value.CloneTree(root);
         }
 
-        private static void Clear_OnClick(TerminalTarget target)
+        #endregion
+
+        #region Public Methods
+
+        public void AddTab(TerminalTab tab)
         {
-            target.Clear();
+            if (tab is null) throw new ArgumentNullException(nameof(tab));
+            if (_tabs.Contains(tab)) throw new ArgumentException("Tab has already been added", nameof(tab));
+            _tabs.Add(tab);
+            AddTabPreview(tab);
         }
+
+        public void RemoveTab(TerminalTab tab)
+        {
+            if (tab is null) throw new ArgumentNullException(nameof(tab));
+            if (!_tabs.Contains(tab))
+                throw new ArgumentException("Tab has not been added to Terminal Window", nameof(tab));
+            _tabs.Remove(tab);
+        }
+
+        public void RemoveTabAt(int tabNr)
+        {
+            if (tabNr < 0) throw new ArgumentException("Tab to be removed can not have negative index", nameof(tabNr));
+            if (tabNr >= _tabs.Count) throw new ArgumentException("Tab to be removed is out of range", nameof(tabNr));
+            _tabs.RemoveAt(tabNr);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void AddTabPreview(TerminalTab tab)
+        {
+            var preview = new VisualElement();
+            TabPreviewTree.Value.CloneTree(preview);
+            TabBar.Add(preview);
+        }
+
+        private void SelectTab(TerminalTab tab)
+        {
+            
+        }
+
+        // TODO: Make private
+        public void RemoveAllTabPreviews()
+        {
+            TabBar.Clear();
+        }
+
+        #endregion
         
-        #endregion
-
-        #region Static Methods
-
-        public static void RegisterTerminalTarget(TerminalTarget target)
-        {
-            if (target is null) throw new ArgumentNullException(nameof(target));
-            if (Window._targets.Contains(target))
-            {
-                Debug.LogError($"Target {target} already registered");
-                return;
-            }
-            Window._targets.Add(target);
-        }
-
-        public static void UnregisterTerminalTarget(TerminalTarget target)
-        {
-            if (target is null) throw new ArgumentNullException(nameof(target));
-            if (!Window._targets.Contains(target))
-            {
-                Debug.LogError($"Target {target} has not been registered, and can therefore not be removed");
-                return;
-            }
-
-            Window._targets.Remove(target);
-        }
-
-        #endregion
     }
 }

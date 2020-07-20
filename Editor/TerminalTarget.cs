@@ -14,7 +14,8 @@ namespace JLog.Editor
 
         public TerminalTarget()
         {
-            Terminal.RegisterTerminalTarget(this);
+            //Terminal.RegisterTerminalTarget(this);
+            Debug.Log("Init");
         }
         
         // TODO: Convert to async

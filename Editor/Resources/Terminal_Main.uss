@@ -4,8 +4,8 @@
     height: 100%;
 }
 
-.jlog-terminal-toolbar {
-    height: 24px;
+.jlog-terminal-tab-bar{
+    height: 40px;
     background-color: #0000ff;
 }
 
