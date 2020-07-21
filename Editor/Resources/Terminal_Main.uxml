@@ -9,7 +9,6 @@
     <engine:VisualElement class="jlog-terminal">
         <!-- Tab Bar -->
         <engine:VisualElement class="jlog-terminal-tab-bar" name="jlog-terminal-tab-bar">
-
         </engine:VisualElement>
 
         <!-- Content -->

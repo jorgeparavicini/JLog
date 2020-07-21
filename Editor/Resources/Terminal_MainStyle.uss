@@ -6,11 +6,14 @@
 
 .jlog-terminal-tab-bar{
     height: 40px;
-    background-color: #0000ff;
+    display: flex;
+    flex-direction: row;
+    background-color: #303030;
+    padding: 0 10px;
 }
 
 .jlog-terminal-content {
-    background-color: yellow;
+    background-color: #383838;
     height: 100%;
 }
 
