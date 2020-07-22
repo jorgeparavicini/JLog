@@ -21,11 +21,11 @@ namespace JLog.Editor
 
         #region UiResources
 
-        private static readonly Lazy<VisualTreeAsset> RootTree =
-            new Lazy<VisualTreeAsset>(() => Resources.Load<VisualTreeAsset>("Terminal_Main"));
+        private static VisualTreeAsset RootTree => Resources.Load<VisualTreeAsset>("Terminal_Main");
 
-        private static readonly Lazy<StyleSheet> StyleSheet =
-            new Lazy<StyleSheet>(() => Resources.Load<StyleSheet>("Terminal_MainStyle"));
+        private static StyleSheet StyleSheet => Resources.Load<StyleSheet>("Terminal_MainStyle");
+
+        private static Texture Icon => Resources.Load<Texture>("img/terminal_white");
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace JLog.Editor
         [MenuItem("Window/Terminal")]
         public static void ShowWindow()
         {
-            Window.titleContent = new GUIContent("Terminal");
+            Window.titleContent = new GUIContent("Terminal", Icon);
         }
 
         #endregion
@@ -54,8 +54,8 @@ namespace JLog.Editor
         {
             // The root element of the window.
             var root = rootVisualElement;
-            root.styleSheets.Add(StyleSheet.Value);
-            RootTree.Value.CloneTree(root);
+            root.styleSheets.Add(StyleSheet);
+            RootTree.CloneTree(root);
 
             // Re add existing tabs.
             _selectedTabNr = 0;
