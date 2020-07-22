@@ -1,4 +1,6 @@
 ﻿using System;
+using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,6 +9,14 @@ namespace JLog.Editor
     [Serializable]
     public class TerminalTab : ScriptableObject
     {
+
+        #region UI Resources
+
+        private static VisualTreeAsset RootTree => Resources.Load<VisualTreeAsset>("Terminal_Tab");
+
+        private static StyleSheet StyleSheet => Resources.Load<StyleSheet>("Terminal_TabStyle");
+
+        #endregion
 
         #region Serialized Fields
 
@@ -30,7 +40,9 @@ namespace JLog.Editor
 
         private void OnEnable()
         {
-            Content = CreateContent();
+            var c = new VisualElement();
+            c.style.flexGrow = new StyleFloat(1);
+            Content = PopulateContent(c);
         }
 
 
@@ -38,12 +50,14 @@ namespace JLog.Editor
 
         #region Virtual Methods
 
-        protected virtual VisualElement CreateContent()
+        protected virtual VisualElement PopulateContent(VisualElement content)
         {
-            return new VisualElement();
+            RootTree.CloneTree(content);
+            content.styleSheets.Add(StyleSheet);
+            content.Bind(new SerializedObject(this));
+            return content;
         }
-
-
+        
         #endregion
 
     }

@@ -30,8 +30,10 @@ namespace JLog.Editor
         #endregion
 
         #region Fields
-
+        
         private readonly List<TerminalTab> _tabs = new List<TerminalTab>();
+        // TODO: Serialize this field after fixing selection error
+        //[SerializeField]
         private int _selectedTabNr;
 
         #endregion
@@ -93,14 +95,15 @@ namespace JLog.Editor
                 throw new ArgumentException("Tab has not been added to Terminal Window", nameof(tab));
 
             var index = _tabs.IndexOf(tab);
-            _tabs.Remove(tab);
-            RemoveTabHeaderAt(index);
+            RemoveTabAt(index);
         }
 
         public void RemoveTabAt(int tabNr)
         {
-            if (tabNr < 0) throw new ArgumentException("Tab to be removed can not have negative index", nameof(tabNr));
-            if (tabNr >= _tabs.Count) throw new ArgumentException("Tab to be removed is out of range", nameof(tabNr));
+            if (tabNr < 0) 
+                throw new ArgumentException("Tab to be removed can not have negative index", nameof(tabNr));
+            if (tabNr >= _tabs.Count) 
+                throw new ArgumentException("Tab to be removed is out of range", nameof(tabNr));
             _tabs.RemoveAt(tabNr);
             RemoveTabHeaderAt(tabNr);
         }
@@ -108,8 +111,8 @@ namespace JLog.Editor
         public void RemoveAllTabs()
         {
             _tabs.Clear();
-            RemoveTabContent();
             RemoveAllTabHeaders();
+            RemoveTabContent();
         }
 
         public void SelectTab(TerminalTab tab)
@@ -120,7 +123,11 @@ namespace JLog.Editor
                     "Tab has not been added to terminal, but is tried to be selected",
                     nameof(tab));
             var index = _tabs.IndexOf(tab);
-            SelectTab(index);
+            TabBar.Query<TabHeader>().AtIndex(_selectedTabNr).Selected = false;
+            TabBar.Query<TabHeader>().AtIndex(index).Selected = true;
+            _selectedTabNr = index;
+            
+            SetTabContent(tab);
         }
 
         public void SelectTab(int tabNr)
@@ -129,9 +136,8 @@ namespace JLog.Editor
             if (tabNr >= _tabs.Count)
                 throw new ArgumentException("Tab index to be selected exceeds the amount of available tabs",
                     nameof(tabNr));
-            TabBar.Query<TabHeader>().AtIndex(_selectedTabNr).Selected = false;
-            TabBar.Query<TabHeader>().AtIndex(tabNr).Selected = true;
-            _selectedTabNr = tabNr;
+            
+            SelectTab(_tabs[tabNr]);
         }
 
         #endregion
@@ -184,5 +190,6 @@ namespace JLog.Editor
         }
 
         #endregion
+        
     }
 }

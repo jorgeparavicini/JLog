@@ -15,15 +15,6 @@
 .jlog-terminal-content {
     background-color: #383838;
     height: 100%;
-}
-
-
-
-.green {
-    background-color: green;
-}
-
-.red {
-    background-color: red;
+    display: flex;
 }
 
