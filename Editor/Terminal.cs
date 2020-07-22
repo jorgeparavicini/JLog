@@ -33,7 +33,7 @@ namespace JLog.Editor
         
         private readonly List<TerminalTab> _tabs = new List<TerminalTab>();
         // TODO: Serialize this field after fixing selection error
-        //[SerializeField]
+        [SerializeField]
         private int _selectedTabNr;
 
         #endregion
@@ -104,6 +104,17 @@ namespace JLog.Editor
                 throw new ArgumentException("Tab to be removed can not have negative index", nameof(tabNr));
             if (tabNr >= _tabs.Count) 
                 throw new ArgumentException("Tab to be removed is out of range", nameof(tabNr));
+            if (_tabs.Count <= 0) throw new InvalidOperationException("There are no tabs open.");
+            if (_tabs.Count == 1) return;
+            if (_selectedTabNr == tabNr)
+            {
+                if (tabNr == _tabs.Count - 1) SelectTab(tabNr - 1);
+                else SelectTab(tabNr + 1);
+            }
+            else
+            {
+                _selectedTabNr -= 1;
+            }
             _tabs.RemoveAt(tabNr);
             RemoveTabHeaderAt(tabNr);
         }
@@ -123,7 +134,10 @@ namespace JLog.Editor
                     "Tab has not been added to terminal, but is tried to be selected",
                     nameof(tab));
             var index = _tabs.IndexOf(tab);
-            TabBar.Query<TabHeader>().AtIndex(_selectedTabNr).Selected = false;
+            if (_tabs.Count >= 1)
+            {
+                TabBar.Query<TabHeader>().AtIndex(_selectedTabNr).Selected = false;
+            }
             TabBar.Query<TabHeader>().AtIndex(index).Selected = true;
             _selectedTabNr = index;
             
@@ -138,6 +152,11 @@ namespace JLog.Editor
                     nameof(tabNr));
             
             SelectTab(_tabs[tabNr]);
+        }
+
+        public void Breakpoint()
+        {
+            Debug.Log("Hue");
         }
 
         #endregion
