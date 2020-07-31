@@ -1,8 +1,8 @@
 {
-    "name": "Unity.JLog.Editor",
-    "rootNamespace": "JLog",
+    "name": "Unity.UTerm.Editor",
+    "rootNamespace": "UTerm",
     "references": [
-        "GUID:a8e00d1be1b45e745833404cbad3945c"
+        "GUID:47c496e68c6dcf24f9683b90987fc2cf"
     ],
     "includePlatforms": [
         "Editor"

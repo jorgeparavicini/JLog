@@ -1,0 +1,9 @@
+.uix-terminal-entry {
+    display: flex;
+    flex-direction: row;
+}
+
+.uix-terminal-entry__text {
+    -unity-text-align: middle-left;
+    font-size: 14px;
+}

@@ -1,34 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using NLog;
 using NLog.Targets;
+using UIX;
 using UnityEngine;
+using UTerm.Editor.UI;
 
-namespace JLog.Editor
+namespace UTerm.Editor
 {
-    
     [Target("UnityTerminal")]
     public class TerminalTarget : TargetWithLayout
     {
-        
-        private readonly List<TerminalEntry> _entries = new List<TerminalEntry>();
+        private NLogTab _tab;
 
-        public TerminalTarget()
+        protected override void InitializeTarget()
         {
-            //Terminal.RegisterTerminalTarget(this);
-            Debug.Log("Init");
+            base.InitializeTarget();
+            var tab = Terminal.Window.GetTabWithName(Name);
+            switch (tab)
+            {
+                case null:
+                    _tab = new NLogTab {TabName = Name};
+                    Terminal.Window.AddTab(_tab);
+                    break;
+                case NLogTab nlogTab:
+                    _tab = nlogTab;
+                    break;
+                default:
+                    throw new InvalidOperationException(
+                        "Can not create Terminal tab as there is already a different tab registered with the same name.");
+            }
         }
-        
-        // TODO: Convert to async
+
         protected override void Write(LogEventInfo logEvent)
         {
-            Debug.Log(Layout.Render(logEvent));
-            _entries.Add(new TerminalEntry(Layout.Render(logEvent)));
-        }
-
-        public void Clear()
-        {
-            Debug.Log("Clear");
-            _entries.Clear();
+            _tab.AddEntry(new NLogEntry(logEvent, Layout));
         }
     }
 }

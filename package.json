@@ -1,8 +1,8 @@
 {
-  "name": "com.jorgeparavicini.jlog",
+  "name": "com.jorgeparavicini.uterm",
   "version": "0.0.1",
-  "displayName": "JLog",
-  "description": "A Logger for Unity based on the NLog Package for C#",
+  "displayName": "UTerm",
+  "description": "This package adds a Terminal Window to Unity where you can enter commands directly.\nAlso it adds the well known NLog package for better logging.",
   "unity": "2020.1",
   "unityRelease": "0b14",
   "type": "library"
