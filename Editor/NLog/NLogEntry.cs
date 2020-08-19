@@ -2,7 +2,7 @@
 using NLog.Layouts;
 using UnityEngine;
 
-namespace UTerm.Editor
+namespace UTerm.Editor.NLog
 {
     public class NLogEntry : ISerializationCallbackReceiver
     {
