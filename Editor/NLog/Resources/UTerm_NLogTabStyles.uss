@@ -1,4 +1,19 @@
-﻿.uterm-nlog-tab {
-    width: 100%;
-    height: 100%;
+﻿.uterm-nlog__content {
+    display: flex;
+}
+
+.uterm-nlog__toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row-reverse;
+    border-bottom-width: 1px;
+    border-bottom-color: #353535;
+}
+
+.uterm-nlog__clear {
+    margin: 5px 10px;
+}
+
+.uterm-nlog__list {
+    flex: 1 0 auto;
 }

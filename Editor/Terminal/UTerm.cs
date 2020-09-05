@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
 using UIX;
@@ -40,7 +41,8 @@ namespace UTerm.Editor.Terminal
         {
             RootTree.CloneTree(rootVisualElement);
             rootVisualElement.styleSheets.Add(StyleSheet);
-            
+
+            panes.RemoveAll(pane => pane is null);
             panes.ForEach(t =>
             {
                 if (t.Active) DisplayPane(t);
@@ -86,8 +88,14 @@ namespace UTerm.Editor.Terminal
             tab.Add(pane.View);
             tab.AddToClassList(UixResources.ExpandClassName);
             // Bind the tab name
-            tab.BindTitle(new SerializedObject(pane), "<TabName>k__BackingField");
-
+            tab.TabName = pane.TabName;
+            pane.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(UTermPane.TabName))
+                {
+                    tab.TabName = pane.TabName;
+                }
+            };
             TabView.AddTab(tab);
         }
 

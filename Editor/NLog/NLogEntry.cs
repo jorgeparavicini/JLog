@@ -1,31 +1,25 @@
-﻿using NLog;
+﻿using System;
+using NLog;
 using NLog.Layouts;
 using UnityEngine;
 
 namespace UTerm.Editor.NLog
 {
-    public class NLogEntry : ISerializationCallbackReceiver
+    [Serializable]
+    public class NLogEntry
     {
-        public LogEventInfo LogEvent { get; }
-        
-        public Layout Layout { get; }
+        [field: SerializeField] public string LogLevelName { get; set; }
+        [field: SerializeField] public string LoggerName { get; set; }
+        [field: SerializeField] public string RenderedMessage { get; set; }
 
-        public string RenderedMessage => Layout.Render(LogEvent);
-
-        public NLogEntry(LogEventInfo logEvent, Layout layout)
+        public static NLogEntry FromLog(LogEventInfo info, Layout layout)
         {
-            LogEvent = logEvent;
-            Layout = layout;
-        }
-
-        public void OnBeforeSerialize()
-        {
-            Debug.Log("Before Serialization");
-        }
-
-        public void OnAfterDeserialize()
-        {
-            Debug.Log("After Serialization");
+            return new NLogEntry
+            {
+                LogLevelName = info.Level.Name,
+                LoggerName = info.LoggerName,
+                RenderedMessage = layout.Render(info)
+            };
         }
     }
 }

@@ -5,7 +5,13 @@
         xmlns:uix="UIX"
         xsi:noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd"
 >
-    <engine:Label name="uterm-nlog-tab__not-initialized" class="uix--expand" text="Not Initialized"/>
-    <engine:ListView name="uterm-nlog-tab" class="uterm-nlog-tab">
-    </engine:ListView>
+    <engine:Label name="uterm-nlog__not-initialized" class="uix--expand" text="Not Initialized"/>
+    <engine:VisualElement class="uterm-nlog__content uix--expand">
+        <engine:VisualElement class="uterm-nlog__toolbar">
+            <engine:Button class="uterm-nlog__clear" name="uterm-nlog__clear" text="clear">
+            </engine:Button>
+        </engine:VisualElement>
+        <engine:ListView name="uterm-nlog__list" class="uterm-nlog__list">
+        </engine:ListView>
+    </engine:VisualElement>
 </engine:UXML>

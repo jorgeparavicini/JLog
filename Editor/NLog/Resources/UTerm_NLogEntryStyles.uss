@@ -1,9 +1,9 @@
-.uix-terminal-entry {
+.label {
     display: flex;
     flex-direction: row;
 }
 
-.uix-terminal-entry__text {
+Label {
     -unity-text-align: middle-left;
     font-size: 14px;
 }

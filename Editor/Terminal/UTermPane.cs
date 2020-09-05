@@ -1,17 +1,30 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UTerm.Editor.Terminal
 {
     [Serializable]
-    public abstract class UTermPane : ScriptableObject
+    public abstract class UTermPane : ScriptableObject, INotifyPropertyChanged
     {
+        [SerializeField] private string tabName = "New UTerm Pane";
+
         /// <summary>
         /// The name of the pane that should be displayed in the tab view of the terminal.
         /// </summary>
-        [field: SerializeField]
-        public string TabName { get; set; } = "New UTerm Pane";
+        
+        public string TabName
+        {
+            get => tabName;
+            set
+            {
+                tabName = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// The state representing whether the Pane is currently displayed in the Tab View.
@@ -30,5 +43,13 @@ namespace UTerm.Editor.Terminal
         /// The view to be displayed when the Pane is activated.
         /// </summary>
         public abstract VisualElement View { get; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

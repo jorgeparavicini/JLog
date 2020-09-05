@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using UnityEngine;
+using Logger = NLog.Logger;
 
 namespace UTerm.Editor.NLog
 {
@@ -22,11 +21,13 @@ namespace UTerm.Editor.NLog
 
         #region Fields & Properties
 
-        private List<LogEventInfo> _logs = new List<LogEventInfo>();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        public List<NLogEntry> Logs { get; private set; }= new List<NLogEntry>();
+        
+        [RequiredParameter] public string TabName { get; set; }
+        
         private string PersistencePath =>
             Path.Combine(Directory.GetCurrentDirectory(), "Packages/UTerm/Editor/Data/", Name.GetHashCode().ToString());
-        public ReadOnlyCollection<LogEventInfo> Logs => _logs.AsReadOnly();
-        [RequiredParameter] public string TabName { get; set; }
 
         #endregion
 
@@ -42,25 +43,29 @@ namespace UTerm.Editor.NLog
 
         protected override void InitializeTarget()
         {
+            Logger.Debug($"Initializing target: {Name}");
             base.InitializeTarget();
 
             Deserialize();
             TargetInitialized(this);
+            Logger.Debug($"Initialized target: {Name}");
         }
 
         protected override void CloseTarget()
         {
+            Logger.Debug($"Closing target: {Name}");
             base.CloseTarget();
 
             Serialize();
             TargetClosed(this);
+            Logger.Debug($"Closed target: {Name}");
         }
 
         protected override void Write(LogEventInfo logEvent)
         {
             base.Write(logEvent);
 
-            _logs.Add(logEvent);
+            Logs.Add(NLogEntry.FromLog(logEvent, Layout));
             DidWrite(logEvent);
         }
         
@@ -72,8 +77,7 @@ namespace UTerm.Editor.NLog
         {
             var serializer = new XmlSerializer(typeof(List<NLogEntry>));
             using var writer = new StreamWriter(PersistencePath);
-            var data = _logs.Select(NLogEntry.FromLog).ToList();
-            serializer.Serialize(writer, data);
+            serializer.Serialize(writer, Logs);
         }
 
         private void Deserialize()
@@ -81,7 +85,7 @@ namespace UTerm.Editor.NLog
             if (!File.Exists(PersistencePath)) return;
             var serializer = new XmlSerializer(typeof(List<NLogEntry>));
             using var fs = new FileStream(PersistencePath, FileMode.Open);
-            _logs = ((List<NLogEntry>) serializer.Deserialize(fs)).Select(entry => entry.ToLog()).ToList();
+            Logs = (List<NLogEntry>) serializer.Deserialize(fs);
         }
 
         #endregion
